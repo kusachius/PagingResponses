@@ -37,9 +37,6 @@ namespace Kusachius.PagingResponses
                     case "pagesize":
                         criteria.SetPageSize(int.Parse(q.Value));
                         break;
-                    case "sort":
-                        criteria.AddSort(new Sorting(q.Key, q.Value));
-                        break;
                     case "page":
                         int page;
                         if (int.TryParse(q.Value, out page))
@@ -55,7 +52,14 @@ namespace Kusachius.PagingResponses
                         var parts = splitKey(q.Key);
                         if (parts.Length > 1)
                         {
-                            criteria.AddCondition(new Condition(parts[0], mapOperator(parts[1]), q.Value));
+                            if (parts[1] == "sort")
+                            {
+                                criteria.AddSort(new Sorting(parts[0], q.Value));
+                            }
+                            else
+                            {
+                                criteria.AddCondition(new Condition(parts[0], mapOperator(parts[1]), q.Value));
+                            }
                         }
                         break;
                 }

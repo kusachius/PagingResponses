@@ -54,7 +54,14 @@ namespace Kusachius.PagingResponses
             {
                 string column = mapper.ToDbCriteria(sort.Column);
                 var propertyInfo = query.First().GetType().GetProperty(column);
-                query = query.OrderBy(e => propertyInfo.GetValue(e, null));
+                if (sort.Direction == "asc")
+                {
+                    query = query.OrderBy(e => propertyInfo.GetValue(e, null));
+                }
+                else
+                {
+                    query = query.OrderByDescending(e => propertyInfo.GetValue(e, null));
+                }
             }
 
             return query;
@@ -75,13 +82,36 @@ namespace Kusachius.PagingResponses
                 var first = query.First();
                 var propertyInfo = first.GetType().GetProperty(column);
                 string val = cleaner.Clean(cond.Value);
-                switch(cond.Operation)
+                switch (cond.Operation)
                 {
                     case "=":
                         query = query.Where(e => (string)propertyInfo.GetValue(e, null) == val);
                         break;
                     case "like":
-                        query = query.Where(e => ((string)propertyInfo.GetValue(e, null)).Contains(val));
+                        int start = 0;
+                        int end = 0;
+                        if (val.StartsWith('%'))
+                        {
+                            start = 1;
+                            val = val.Substring(1);
+                        }
+                        if (val.EndsWith('%'))
+                        {
+                            end = 2;
+                            val = val.Substring(0, val.Length - 1);
+                        }
+                        switch (start + end)
+                        {
+                            case 3: // both
+                                query = query.Where(e => ((string)propertyInfo.GetValue(e, null)).Contains(val));
+                                break;
+                            case 1: // start
+                                query = query.Where(e => ((string)propertyInfo.GetValue(e, null)).StartsWith(val, StringComparison.InvariantCulture));
+                                break;
+                            case 2: // end
+                                query = query.Where(e => ((string)propertyInfo.GetValue(e, null)).EndsWith(val, StringComparison.InvariantCulture));
+                                break;
+                        }
                         break;
                 }
             }
