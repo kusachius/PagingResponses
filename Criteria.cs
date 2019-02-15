@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kusachius.PagingResponses
 {
-    public class Criteria
+    public class Criteria : ICriteria
     {
         List<Condition> conditions = new List<Condition>();
         List<Sorting> sorts = new List<Sorting>();
@@ -52,15 +53,14 @@ namespace Kusachius.PagingResponses
         {
             foreach (var sort in sorts)
             {
-                string column = mapper.ToDbCriteria(sort.Column);
-                var propertyInfo = query.First().GetType().GetProperty(column);
+                string column = mapper.ToDbSortColumn(sort.Column);
                 if (sort.Direction == "asc")
                 {
-                    query = query.OrderBy(e => propertyInfo.GetValue(e, null));
+                    query = query.OrderBy(e => EF.Property<string>(e, column));
                 }
                 else
                 {
-                    query = query.OrderByDescending(e => propertyInfo.GetValue(e, null));
+                    query = query.OrderByDescending(e => EF.Property<string>(e, column));
                 }
             }
 
@@ -78,14 +78,12 @@ namespace Kusachius.PagingResponses
 
             foreach (var cond in conditions)
             {
-                string column = mapper.ToDbCriteria(cond.Column);
-                var first = query.First();
-                var propertyInfo = first.GetType().GetProperty(column);
+                string column = mapper.ToDbWhereColumn(cond.Column);
                 string val = cleaner.Clean(cond.Value);
                 switch (cond.Operation)
                 {
                     case "=":
-                        query = query.Where(e => (string)propertyInfo.GetValue(e, null) == val);
+                        query = query.Where(e => EF.Property<string>(e, column) == val);
                         break;
                     case "like":
                         int start = 0;
@@ -103,13 +101,13 @@ namespace Kusachius.PagingResponses
                         switch (start + end)
                         {
                             case 3: // both
-                                query = query.Where(e => ((string)propertyInfo.GetValue(e, null)).Contains(val));
+                                query = query.Where(e => EF.Property<string>(e, column).Contains(val));
                                 break;
                             case 1: // start
-                                query = query.Where(e => ((string)propertyInfo.GetValue(e, null)).StartsWith(val, StringComparison.InvariantCulture));
+                                query = query.Where(e => EF.Property<string>(e, column).StartsWith(val, StringComparison.InvariantCulture));
                                 break;
                             case 2: // end
-                                query = query.Where(e => ((string)propertyInfo.GetValue(e, null)).EndsWith(val, StringComparison.InvariantCulture));
+                                query = query.Where(e => EF.Property<string>(e, column).EndsWith(val, StringComparison.InvariantCulture));
                                 break;
                         }
                         break;
