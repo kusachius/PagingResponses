@@ -25,10 +25,10 @@ namespace Kusachius.PagingResponses
         /// </summary>
         /// <returns>The from request.</returns>
         /// <param name="query">Query.</param>
-        /// <param name="className">Class name.</param>
-        public Criteria CreateFromRequest(IQueryCollection query, string className)
+        /// <param name="classType">Class name.</param>
+        public Criteria CreateFromRequest(IQueryCollection query, Type classType)
         {
-            var mapper = mapperFactory.GetMapper(className);
+            var mapper = mapperFactory.GetMapper(classType);
             var criteria = new Criteria(mapper, cleaner);
             foreach (var q in query)
             {
@@ -41,11 +41,11 @@ namespace Kusachius.PagingResponses
                         int page;
                         if (int.TryParse(q.Value, out page))
                         {
-                            criteria.pagingInfo.CurrentPage = page;
+                            criteria.PagingInfo.CurrentPage = page;
                         }
                         else
                         {
-                            criteria.pagingInfo.CurrentPage = 1;
+                            criteria.PagingInfo.CurrentPage = 1;
                         }
                         break;
                     default:

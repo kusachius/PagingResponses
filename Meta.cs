@@ -3,8 +3,8 @@ namespace Kusachius.PagingResponses
 {
     public class Paigination
     {
-        public int Total;
-        public int Count { get { return Total; } }
+        public int? Total;
+        public int? Count { get { return Total; } }
         public int PerPage;
         public int CurrentPage;
         public int? TotalPages;

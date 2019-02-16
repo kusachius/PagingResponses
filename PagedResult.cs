@@ -2,61 +2,64 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kusachius.PagingResponses
 {
-    class Result<T>
+    public class PagedResult<T>
     {
-        public IEnumerable<T> Data;
-        public Meta Meta;
-    }
-
-    public class PagedResult<T> : IActionResult
-    {
-        public IEnumerable<T> Data;
-        public Meta Meta;
-        private Result<T> result = new Result<T>();
-        private IQueryable<T> query;
-        private Criteria criteria;
+        public IEnumerable<T> Data { get; protected set; }
+        public int PerPage { get; protected set; }
+        public int CurrentPage { get; protected set; }
+        public int? TotalPages { get; protected set; } = null;
+        public int? TotalItems { get; protected set; } = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kusachius.PagingResponses.PagedResult`1"/> class.
+        /// Creates new result
         /// </summary>
         /// <param name="query">Query.</param>
         /// <param name="criteria">Criteria.</param>
-        public PagedResult(IQueryable<T> query, Criteria criteria = null)
+        public static async Task<PagedResult<T>> CreateResultAsync(IQueryable<T> query, ICriteria criteria = null, bool includeTotals = true)
         {
-            this.query = query;
-            this.criteria = criteria;
-        }
 
-        /// <summary>
-        /// Executes the result async.
-        /// </summary>
-        /// <returns>The result async.</returns>
-        /// <param name="context">Context.</param>
-        public async Task ExecuteResultAsync(ActionContext context)
-        {
+            PagedResult<T> result = new PagedResult<T>();
+
             if (criteria != null)
             {
                 query = criteria.Apply(query);
             }
-            result.Meta = new Meta();
-            result.Meta.Pagination.CurrentPage = criteria. pagingInfo.CurrentPage;
-            result.Meta.Pagination.PerPage = criteria.pagingInfo.PageSize;
-            result.Data = await query.Skip(criteria.pagingInfo.RecordsToSkip()).Take(criteria.pagingInfo.PageSize).ToListAsync();
-            result.Meta.Pagination.Total = await query.CountAsync();
-            result.Meta.Pagination.TotalPages = (int)Math.Ceiling((float)result.Meta.Pagination.Total / criteria.pagingInfo.PageSize);
 
-            var objectResult = new ObjectResult(result)
+            result.CurrentPage = criteria.PagingInfo.CurrentPage;
+            result.PerPage = criteria.PagingInfo.PageSize;
+            if (includeTotals)
             {
-                StatusCode = StatusCodes.Status200OK
-            };
+                result.TotalItems = await query.CountAsync();
+                result.TotalPages = (int)Math.Ceiling((float)result.TotalItems / criteria.PagingInfo.PageSize);
+            }
 
-            await objectResult.ExecuteResultAsync(context);
+            result.Data = await query.ToListAsync();
+
+            return result;
         }
+
+        /// <summary>
+        /// Converts to mapped type
+        /// </summary>
+        /// <returns>The to.</returns>
+        /// <param name="mapper">Mapper.</param>
+        public PagedResult<K> ConvertTo<K>(IMapper mapper)
+        {
+            return new PagedResult<K>
+            {
+                PerPage = PerPage,
+                CurrentPage = CurrentPage,
+                TotalPages = TotalPages,
+                TotalItems = TotalItems,
+
+                Data = (IEnumerable<K>)mapper.Map<IEnumerable<K>>(Data)
+            };
+        }
+
     }
 }

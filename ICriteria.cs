@@ -37,5 +37,7 @@ namespace Kusachius.PagingResponses
         /// </summary>
         /// <param name="sort">Sort.</param>
         void AddSort(Sorting sort);
+
+        PagingInfo PagingInfo { get; }
     }
 }

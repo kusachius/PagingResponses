@@ -11,7 +11,7 @@ namespace Kusachius.PagingResponses
         List<Sorting> sorts = new List<Sorting>();
         ICriteriaMapper mapper;
         IStringCleaner cleaner;
-        public PagingInfo pagingInfo { get; }
+        public PagingInfo PagingInfo { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Kusachius.PagingResponses.Criteria"/> class.
@@ -22,7 +22,7 @@ namespace Kusachius.PagingResponses
         {
             this.mapper = mapper;
             this.cleaner = cleaner;
-            pagingInfo = new PagingInfo
+            PagingInfo = new PagingInfo
             {
                 PageSize = 20
             };
@@ -132,7 +132,7 @@ namespace Kusachius.PagingResponses
         /// <param name="pageSize">Page size.</param>
         public void SetPageSize(int pageSize)
         {
-            this.pagingInfo.PageSize = pageSize;
+            this.PagingInfo.PageSize = pageSize;
         }
 
         /// <summary>
