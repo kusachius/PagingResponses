@@ -3,6 +3,6 @@ namespace Kusachius.PagingResponses
 {
     public interface ICriteriaMapperFactory
     {
-        ICriteriaMapper GetMapper(Type classType);
+        ICriteriaMapper GetMapper<T>();
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Kusachius.PagingResponses
 {
-    public interface ICriteria
+    public interface ICriteria<T>
     {
         /// <summary>
         /// Apply the specified query.
@@ -12,7 +12,7 @@ namespace Kusachius.PagingResponses
         /// <returns>The apply.</returns>
         /// <param name="query">Query.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        IQueryable<T> Apply<T>(IQueryable<T> query);
+        IQueryable<T> Apply<K>(IQueryable<T> query);
         /// <summary>
         /// Applies the where.
         /// </summary>
@@ -38,6 +38,6 @@ namespace Kusachius.PagingResponses
         /// <param name="sort">Sort.</param>
         void AddSort(Sorting sort);
 
-        PagingInfo PagingInfo { get; }
+        PagingInfo<T> PagingInfo { get; }
     }
 }

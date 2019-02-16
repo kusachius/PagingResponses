@@ -20,21 +20,21 @@ namespace Kusachius.PagingResponses
         /// </summary>
         /// <param name="query">Query.</param>
         /// <param name="criteria">Criteria.</param>
-        public static async Task<PagedResult<T>> CreateResultAsync(IQueryable<T> query, ICriteria criteria = null, bool includeTotals = true)
+        public static async Task<PagedResult<T>> CreateResultAsync(IQueryable<T> query, ICriteria<T> criteria = null, bool includeTotals = true)
         {
 
             PagedResult<T> result = new PagedResult<T>();
 
             if (criteria != null)
             {
-                query = criteria.Apply(query);
+                query = criteria.Apply<T>(query);
             }
 
             result.CurrentPage = criteria.PagingInfo.CurrentPage;
             result.PerPage = criteria.PagingInfo.PageSize;
             if (includeTotals)
             {
-                result.TotalItems = await query.CountAsync();
+                result.TotalItems = await criteria.PagingInfo.TotalsQuery.CountAsync();
                 result.TotalPages = (int)Math.Ceiling((float)result.TotalItems / criteria.PagingInfo.PageSize);
             }
 

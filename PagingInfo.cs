@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
+
 namespace Kusachius.PagingResponses
 {
-    public class PagingInfo
+    public class PagingInfo<T>
     {
         public int PageSize = 20;
         public int CurrentPage = 1;
@@ -14,5 +16,7 @@ namespace Kusachius.PagingResponses
         public PagingInfo()
         {
         }
+
+        public IQueryable<T> TotalsQuery;
     }
 }

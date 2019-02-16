@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kusachius.PagingResponses
 {
-    public class Criteria : ICriteria
+    public class Criteria<T> : ICriteria<T>
     {
         List<Condition> conditions = new List<Condition>();
         List<Sorting> sorts = new List<Sorting>();
         ICriteriaMapper mapper;
         IStringCleaner cleaner;
-        public PagingInfo PagingInfo { get; }
+
+        public PagingInfo<T> PagingInfo { get; }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Kusachius.PagingResponses.Criteria"/> class.
@@ -22,7 +24,7 @@ namespace Kusachius.PagingResponses
         {
             this.mapper = mapper;
             this.cleaner = cleaner;
-            PagingInfo = new PagingInfo
+            PagingInfo = new PagingInfo<T>
             {
                 PageSize = 20
             };
@@ -34,10 +36,13 @@ namespace Kusachius.PagingResponses
         /// <returns>The apply.</returns>
         /// <param name="query">Query.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public IQueryable<T> Apply<T>(IQueryable<T> query)
+        public IQueryable<T> Apply<K>(IQueryable<T> query)
         {
-            query = ApplySort(query);
-            query = ApplyWhere(query);
+            query = ApplyWhere<K>(query);
+            PagingInfo.TotalsQuery = query;
+
+            query = ApplySort<K>(query);
+            query = ApplyPaging<K>(query);
 
             // return query.paginate(this.getPageSize());
             return query;
@@ -49,7 +54,7 @@ namespace Kusachius.PagingResponses
         /// <returns>The sort.</returns>
         /// <param name="query">Query.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        private IQueryable<T> ApplySort<T>(IQueryable<T> query)
+        private IQueryable<T> ApplySort<K>(IQueryable<T> query)
         {
             foreach (var sort in sorts)
             {
@@ -73,9 +78,8 @@ namespace Kusachius.PagingResponses
         /// <returns>The where.</returns>
         /// <param name="query">Query.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        private IQueryable<T> ApplyWhere<T>(IQueryable<T> query)
+        private IQueryable<T> ApplyWhere<K>(IQueryable<T> query)
         {
-
             foreach (var cond in conditions)
             {
                 string column = mapper.ToDbWhereColumn(cond.Column);
@@ -115,6 +119,17 @@ namespace Kusachius.PagingResponses
             }
 
             return query;
+        }
+
+        /// <summary>
+        /// Applies the paging.
+        /// </summary>
+        /// <returns>The paging.</returns>
+        /// <param name="query">Query.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        private IQueryable<T> ApplyPaging<K>(IQueryable<T> query)
+        {
+            return query.Skip(PagingInfo.RecordsToSkip()).Take(PagingInfo.PageSize);
         }
 
         /// <summary>

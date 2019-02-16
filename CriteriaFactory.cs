@@ -26,10 +26,10 @@ namespace Kusachius.PagingResponses
         /// <returns>The from request.</returns>
         /// <param name="query">Query.</param>
         /// <param name="classType">Class name.</param>
-        public Criteria CreateFromRequest(IQueryCollection query, Type classType)
+        public Criteria<T> CreateFromRequest<T>(IQueryCollection query)
         {
-            var mapper = mapperFactory.GetMapper(classType);
-            var criteria = new Criteria(mapper, cleaner);
+            var mapper = mapperFactory.GetMapper<T>();
+            var criteria = new Criteria<T>(mapper, cleaner);
             foreach (var q in query)
             {
                 switch (q.Key.ToLower())
