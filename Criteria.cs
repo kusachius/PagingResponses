@@ -104,14 +104,14 @@ namespace Kusachius.PagingResponses
                         }
                         switch (start + end)
                         {
-                            case 3: // both
-                                query = query.Where(e => EF.Property<string>(e, column).Contains(val));
-                                break;
                             case 1: // start
                                 query = query.Where(e => EF.Property<string>(e, column).StartsWith(val, StringComparison.InvariantCulture));
                                 break;
                             case 2: // end
                                 query = query.Where(e => EF.Property<string>(e, column).EndsWith(val, StringComparison.InvariantCulture));
+                                break;
+                            default: // both
+                                query = query.Where(e => EF.Property<string>(e, column).Contains(val));
                                 break;
                         }
                         break;
