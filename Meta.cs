@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Kusachius.PagingResponses
 {
     public class Paigination
@@ -8,7 +10,7 @@ namespace Kusachius.PagingResponses
         public int PerPage;
         public int CurrentPage;
         public int? TotalPages;
-        public Tuple<string, string>[] Links;
+        public Dictionary<string, string> Links;
     }
 
     public class Meta
