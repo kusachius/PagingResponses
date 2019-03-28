@@ -44,6 +44,37 @@ namespace Kusachius.PagingResponses
         }
 
         /// <summary>
+        /// Creates the result.
+        /// </summary>
+        /// <returns>The result.</returns>
+        /// <param name="query">Query.</param>
+        /// <param name="criteria">Criteria.</param>
+        /// <param name="includeTotals">If set to <c>true</c> include totals.</param>
+        public static PagedResult<T> CreateResult(IQueryable<T> query, ICriteria<T> criteria = null, bool includeTotals = true)
+        {
+
+            PagedResult<T> result = new PagedResult<T>();
+
+            if (criteria != null)
+            {
+                query = criteria.Apply<T>(query);
+            }
+
+            result.CurrentPage = criteria.PagingInfo.CurrentPage;
+            result.PerPage = criteria.PagingInfo.PageSize;
+            if (includeTotals)
+            {
+                result.TotalItems = criteria.PagingInfo.TotalsQuery.Count();
+                result.TotalPages = (int)Math.Ceiling((float)result.TotalItems / criteria.PagingInfo.PageSize);
+            }
+
+            result.Data = query.ToList();
+
+            return result;
+        }
+
+
+        /// <summary>
         /// Converts to mapped type
         /// </summary>
         /// <returns>The to.</returns>
