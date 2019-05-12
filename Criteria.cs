@@ -56,20 +56,39 @@ namespace Kusachius.PagingResponses
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         private IQueryable<T> ApplySort<K>(IQueryable<T> query)
         {
-            foreach (var sort in sorts)
+
+            if(sorts.Count == 0)
             {
-                string column = mapper.ToDbSortColumn(sort.Column);
+                return query;
+            }
+
+            IOrderedQueryable<T> qsorted;
+            var sort = sorts.First();
+            string column = mapper.ToDbSortColumn(sort.Column);
+            if (sort.Direction == "asc")
+            {
+                qsorted = query.OrderBy(e => EF.Property<object>(e, column));
+            }
+            else
+            {
+                qsorted = query.OrderByDescending(e => EF.Property<object>(e, column));
+            }
+
+
+            for (int i=0; i<sorts.Count; i++)
+            {
+                column = mapper.ToDbSortColumn(sort.Column);
                 if (sort.Direction == "asc")
                 {
-                    query = query.OrderBy(e => EF.Property<string>(e, column));
+                    qsorted = qsorted.ThenBy(e => EF.Property<object>(e, column));
                 }
                 else
                 {
-                    query = query.OrderByDescending(e => EF.Property<string>(e, column));
+                    qsorted = qsorted.ThenByDescending(e => EF.Property<object>(e, column));
                 }
             }
 
-            return query;
+            return qsorted;
         }
 
         /// <summary>
@@ -88,6 +107,15 @@ namespace Kusachius.PagingResponses
                 {
                     case "=":
                         query = query.Where(e => EF.Property<string>(e, column) == val);
+                        break;
+                    case "in": // integer only values
+                        string[] searchValues = val.Split(',');
+                        List<int> searchIds = new List<int>();
+                        foreach(var x in searchValues)
+                        {
+                            searchIds.Add(Convert.ToInt32(x));
+                        }
+                        query = query.Where(e => searchIds.Contains(Convert.ToInt16(EF.Property<object>(e, column))));
                         break;
                     case "like":
                         int start = 0;
