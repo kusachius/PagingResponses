@@ -6,8 +6,8 @@ namespace Kusachius.PagingResponses
 {
     public class CriteriaFactory
     {
-        ICriteriaMapperFactory mapperFactory;
-        IStringCleaner cleaner;
+        readonly ICriteriaMapperFactory mapperFactory;
+        readonly IStringCleaner cleaner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Kusachius.PagingResponses.CriteriaFactory"/> class.
@@ -49,7 +49,7 @@ namespace Kusachius.PagingResponses
                         }
                         break;
                     default:
-                        var parts = splitKey(q.Key);
+                        var parts = SplitKey(q.Key);
                         if (parts.Length > 1)
                         {
                             if (parts[1] == "sort")
@@ -58,7 +58,7 @@ namespace Kusachius.PagingResponses
                             }
                             else
                             {
-                                criteria.AddCondition(new Condition(parts[0], mapOperator(parts[1]), q.Value));
+                                criteria.AddCondition(new Condition(parts[0], MapOperator(parts[1]), q.Value));
                             }
                         }
                         break;
@@ -73,7 +73,7 @@ namespace Kusachius.PagingResponses
         /// </summary>
         /// <returns>The key.</returns>
         /// <param name="key">Key.</param>
-        private string[] splitKey(string key)
+        private string[] SplitKey(string key)
         {
             // format key[operation]
             var parts = key.Split("[");
@@ -90,7 +90,7 @@ namespace Kusachius.PagingResponses
         /// </summary>
         /// <returns>The operator.</returns>
         /// <param name="opName">Op name.</param>
-        private string mapOperator(string opName)
+        private string MapOperator(string opName)
         {
             switch (opName)
             {

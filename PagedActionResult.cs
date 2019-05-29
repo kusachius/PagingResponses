@@ -11,9 +11,10 @@ namespace Kusachius.PagingResponses
 {
     public class PagedActionResult<T, K> : IActionResult
     {
-        PagedResult<K> data;
-        ApiResult<T> result= new ApiResult<T>();
-        private IMapper mapper;
+        readonly PagedResult<K> data;
+        readonly ApiResult<T> result= new ApiResult<T>();
+        readonly IMapper mapper;
+
         public PagedActionResult(PagedResult<K> data, IMapper mapper = null)
         {
             this.data = data;
