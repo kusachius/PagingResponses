@@ -21,11 +21,11 @@ namespace Kusachius.PagingResponses
         }
 
         /// <summary>
-        /// Creates from request.
+        /// Creates criteria from request
         /// </summary>
-        /// <returns>The from request.</returns>
-        /// <param name="query">Query.</param>
-        /// <param name="classType">Class name.</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public Criteria<T> CreateFromRequest<T>(IQueryCollection query)
         {
             var mapper = mapperFactory.GetMapper<T>();
@@ -104,8 +104,14 @@ namespace Kusachius.PagingResponses
                     return "<";
                 case "lte":
                     return "<=";
-                case "gtq":
+                case "gte":
                     return ">=";
+                case "-eq":
+                    return "+=";
+                case "-neq":
+                    return "+<>";
+                case "-in":
+                    return "+in";
             }
 
             return opName;

@@ -108,15 +108,62 @@ namespace Kusachius.PagingResponses
                     case "=":
                         query = query.Where(e => EF.Property<string>(e, column) == val);
                         break;
-                    case "in": // integer only values
-                        string[] searchValues = val.Split(',');
-                        List<int> searchIds = new List<int>();
-                        foreach(var x in searchValues)
-                        {
-                            searchIds.Add(Convert.ToInt32(x));
-                        }
-                        query = query.Where(e => searchIds.Contains(Convert.ToInt16(EF.Property<object>(e, column))));
+
+                    case "+=":
+                        query = query.Where(e => EF.Property<int>(e, column) == Convert.ToInt32(val));
                         break;
+
+                    case ">":
+                        query = query.Where(e => EF.Property<int>(e, column) > Convert.ToInt32(val));
+                        break;
+
+                    case "<":
+                        query = query.Where(e => EF.Property<int>(e, column) < Convert.ToInt32(val));
+                        break;
+
+                    case ">=":
+                        query = query.Where(e => EF.Property<int>(e, column) >= Convert.ToInt32(val));
+                        break;
+
+                    case "<=":
+                        query = query.Where(e => EF.Property<int>(e, column) <= Convert.ToInt32(val));
+                        break;
+
+                    case "in": // string values
+                        string[] searchValues = val.Split(',');
+                        if (searchValues.Length == 1)
+                        {
+                            query = query.Where(e => EF.Property<string>(e, column) == searchValues[0]);
+                        }
+                        else
+                        {
+                            List<string> searchIds = new List<string>();
+                            foreach (var x in searchValues)
+                            {
+                                searchIds.Add(x);
+                            }
+                            query = query.Where(e => searchIds.Contains(EF.Property<string>(e, column)));
+                        }
+                        break;
+
+                    case "+in": // integer only values
+                        string[] searchValuesInt = val.Split(',');
+                        if (searchValuesInt.Length == 1)
+                        {
+                            int value = Convert.ToInt32(searchValuesInt[0]);
+                            query = query.Where(e => EF.Property<int>(e, column) == value);
+                        }
+                        else
+                        {
+                            List<int> searchIds = new List<int>();
+                            foreach (var x in searchValuesInt)
+                            {
+                                searchIds.Add(Convert.ToInt32(x));
+                            }
+                            query = query.Where(e => searchIds.Contains(EF.Property<int>(e, column)));
+                        }
+                        break;
+
                     case "like":
                         int start = 0;
                         int end = 0;
