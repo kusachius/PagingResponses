@@ -57,7 +57,7 @@ namespace Kusachius.PagingResponses
         private IQueryable<T> ApplySort<K>(IQueryable<T> query)
         {
 
-            if(sorts.Count == 0)
+            if (sorts.Count == 0)
             {
                 return query;
             }
@@ -75,7 +75,7 @@ namespace Kusachius.PagingResponses
             }
 
 
-            for (int i=0; i<sorts.Count; i++)
+            for (int i = 0; i < sorts.Count; i++)
             {
                 column = mapper.ToDbSortColumn(sort.Column);
                 if (sort.Direction == "asc")
@@ -164,6 +164,15 @@ namespace Kusachius.PagingResponses
                         }
                         break;
 
+                    case "wlike":
+                        val = val.Replace("  ", " "); // TODO repeat
+                        string[] words = val.Split(' ');
+                        foreach (string word in words)
+                        {
+                            query = query.Where(e => EF.Property<string>(e, column).Contains(word));
+                        }
+                        break;
+
                     case "like":
                         int start = 0;
                         int end = 0;
@@ -190,6 +199,7 @@ namespace Kusachius.PagingResponses
                                 break;
                         }
                         break;
+
                 }
             }
 

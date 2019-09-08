@@ -79,6 +79,10 @@ namespace Kusachius.PagingResponses
             var parts = key.Split("[");
             if (parts.Length > 1)
             {
+                if (!parts[1].EndsWith(']'))
+                {
+                    throw new PagingResponseException($"Invalid criteria operation: {key}");
+                }
                 parts[1] = parts[1].Substring(0, parts[1].Length - 1);
             }
 

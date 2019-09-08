@@ -5,7 +5,7 @@ namespace Kusachius.PagingResponses
 {
     public class Condition
     {
-        private string[] operations = { "=", ">", "<", ">=", "<=", "in", "like", "+in", "+=", "+<>" };
+        private string[] operations = { "=", ">", "<", ">=", "<=", "in", "like", "wlike", "+in", "+=", "+<>" };
 
         public string Column { get; }
         public string Operation { get; }
