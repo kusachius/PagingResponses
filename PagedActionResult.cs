@@ -41,6 +41,7 @@ namespace Kusachius.PagingResponses
             }
             result.Meta.Pagination.Total = data.TotalItems;
             result.Meta.Pagination.TotalPages = (int)Math.Ceiling((float)result.Meta.Pagination.Total / data.PerPage);
+            result.Meta.Pagination.Totals = data.Totals;
 
             var objectResult = new ObjectResult(result)
             {

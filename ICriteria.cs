@@ -13,12 +13,6 @@ namespace Kusachius.PagingResponses
         /// <param name="query">Query.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         IQueryable<T> Apply<K>(IQueryable<T> query);
-        /// <summary>
-        /// Applies the where.
-        /// </summary>
-        /// <returns>The where.</returns>
-        /// <param name="query">Query.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
 
         /// <summary>
         /// Adds the condition.
@@ -39,5 +33,7 @@ namespace Kusachius.PagingResponses
         void AddSort(Sorting sort);
 
         PagingInfo<T> PagingInfo { get; }
+
+        IEnumerable<string> GetSumFields();
     }
 }

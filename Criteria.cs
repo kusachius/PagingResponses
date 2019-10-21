@@ -9,6 +9,7 @@ namespace Kusachius.PagingResponses
     {
         List<Condition> conditions = new List<Condition>();
         List<Sorting> sorts = new List<Sorting>();
+        public IEnumerable<string> sumFields;
         ICriteriaMapper mapper;
         IStringCleaner cleaner;
 
@@ -242,6 +243,11 @@ namespace Kusachius.PagingResponses
         public void AddSort(Sorting sort)
         {
             sorts.Add(sort);
+        }
+
+        public IEnumerable<string> GetSumFields()
+        {
+            return sumFields;
         }
     }
 }

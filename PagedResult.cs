@@ -14,6 +14,7 @@ namespace Kusachius.PagingResponses
         public int CurrentPage { get; protected set; }
         public int? TotalPages { get; protected set; } = null;
         public int? TotalItems { get; protected set; } = null;
+        public object Totals { get; protected set; } = null;
 
         /// <summary>
         /// Creates new result
@@ -34,7 +35,36 @@ namespace Kusachius.PagingResponses
             result.PerPage = criteria.PagingInfo.PageSize;
             if (includeTotals)
             {
-                result.TotalItems = await criteria.PagingInfo.TotalsQuery.CountAsync();
+                if (criteria.GetSumFields() != null && criteria.GetSumFields().Any())
+                {
+                    var fields = criteria.GetSumFields().ToList();
+                    for (int i = fields.Count; i < 4; i++)
+                    {
+                        fields.Add(fields[0]);
+                    }
+
+                    var q = await criteria.PagingInfo.TotalsQuery.GroupBy(x => 1)
+                        .Select(x => new
+                        {
+                            Totals1 = x.Sum(z => EF.Property<decimal>(z, fields[0])),
+                            Totals2 = x.Sum(z => EF.Property<decimal>(z, fields[1])),
+                            Totals3 = x.Sum(z => EF.Property<decimal>(z, fields[2])),
+                            Totals4 = x.Sum(z => EF.Property<decimal>(z, fields[3])),
+                            Count = x.Count()
+                        }).FirstOrDefaultAsync();
+                    result.TotalItems = q.Count;
+                    result.Totals = new
+                    {
+                        q.Totals1,
+                        q.Totals2,
+                        q.Totals3,
+                        q.Totals4
+                    };
+                }
+                else
+                {
+                    result.TotalItems = criteria.PagingInfo.TotalsQuery.Count();
+                }
                 result.TotalPages = (int)Math.Ceiling((float)result.TotalItems / criteria.PagingInfo.PageSize);
             }
 
@@ -64,7 +94,36 @@ namespace Kusachius.PagingResponses
             result.PerPage = criteria.PagingInfo.PageSize;
             if (includeTotals)
             {
-                result.TotalItems = criteria.PagingInfo.TotalsQuery.Count();
+                if (criteria.GetSumFields() != null && criteria.GetSumFields().Any())
+                {
+                    var fields = criteria.GetSumFields().ToList();
+                    for (int i = fields.Count; i < 4; i++)
+                    {
+                        fields.Add(fields[0]);
+                    }
+
+                    var q = criteria.PagingInfo.TotalsQuery.GroupBy(x => 1)
+                        .Select(x => new
+                        {
+                            Totals1 = x.Sum(z => EF.Property<decimal>(z, fields[0])),
+                            Totals2 = x.Sum(z => EF.Property<decimal>(z, fields[1])),
+                            Totals3 = x.Sum(z => EF.Property<decimal>(z, fields[2])),
+                            Totals4 = x.Sum(z => EF.Property<decimal>(z, fields[3])),
+                            Count = x.Count()
+                        }).FirstOrDefault();
+                    result.TotalItems = q.Count;
+                    result.Totals = new
+                    {
+                        q.Totals1,
+                        q.Totals2,
+                        q.Totals3,
+                        q.Totals4
+                    };
+                }
+                else
+                {
+                    result.TotalItems = criteria.PagingInfo.TotalsQuery.Count();
+                }
                 result.TotalPages = (int)Math.Ceiling((float)result.TotalItems / criteria.PagingInfo.PageSize);
             }
 
@@ -72,6 +131,8 @@ namespace Kusachius.PagingResponses
 
             return result;
         }
+
+
 
 
         /// <summary>

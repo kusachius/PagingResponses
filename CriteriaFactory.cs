@@ -48,6 +48,9 @@ namespace Kusachius.PagingResponses
                             criteria.PagingInfo.CurrentPage = 1;
                         }
                         break;
+                    case "sumfields":
+                        criteria.sumFields = ((string)q.Value).Split(',');
+                        break;
                     default:
                         var parts = SplitKey(q.Key);
                         if (parts.Length > 1)

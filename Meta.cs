@@ -10,6 +10,7 @@ namespace Kusachius.PagingResponses
         public int PerPage;
         public int CurrentPage;
         public int? TotalPages;
+        public object Totals;
         public Dictionary<string, string> Links;
     }
 
