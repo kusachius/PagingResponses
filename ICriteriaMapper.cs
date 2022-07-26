@@ -1,9 +1,8 @@
-﻿using System;
-namespace Kusachius.PagingResponses
+﻿namespace Kusachius.PagingResponses
 {
-    public interface ICriteriaMapper
-    {
-        string ToDbWhereColumn(string column);
-        string ToDbSortColumn(string column);
-    }
+	public interface ICriteriaMapper
+	{
+		string ToDbWhereColumn(string column);
+		string ToDbSortColumn(string column);
+	}
 }

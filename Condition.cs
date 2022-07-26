@@ -3,26 +3,26 @@ using System.Linq;
 
 namespace Kusachius.PagingResponses
 {
-    public class Condition
-    {
-        private string[] operations = { "=", ">", "<", ">=", "<=", "in", "like", "wlike", "+in", "+=", "+<>" };
+	public class Condition
+	{
+		private string[] operations = { "=", ">", "<", ">=", "<=", "in", "like", "wlike", "+in", "+=", "+<>" };
 
-        public string Column { get; }
-        public string Operation { get; }
-        public string Value { get; }
+		public string Column { get; }
+		public string Operation { get; }
+		public string Value { get; }
 
 
-        public Condition(string column, string operation, string value)
-        {
-            if (!operations.Contains(operation))
-            {
-                throw new Exception("Invalid operator " + operation);
-            }
+		public Condition(string column, string operation, string value)
+		{
+			if (!operations.Contains(operation))
+			{
+				throw new Exception("Invalid operator " + operation);
+			}
 
-            Column = column;
-            Operation = operation;
-            Value = value;
-        }
+			Column = column;
+			Operation = operation;
+			Value = value;
+		}
 
-    }
+	}
 }

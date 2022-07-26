@@ -1,8 +1,7 @@
-﻿using System;
-namespace Kusachius.PagingResponses
+﻿namespace Kusachius.PagingResponses
 {
-    public interface IStringCleaner
-    {
-        string Clean(string text);
-    }
+	public interface IStringCleaner
+	{
+		string Clean(string text);
+	}
 }

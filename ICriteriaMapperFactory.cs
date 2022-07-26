@@ -1,8 +1,7 @@
-﻿using System;
-namespace Kusachius.PagingResponses
+﻿namespace Kusachius.PagingResponses
 {
-    public interface ICriteriaMapperFactory
-    {
-        ICriteriaMapper GetMapper<T>();
-    }
+	public interface ICriteriaMapperFactory
+	{
+		ICriteriaMapper GetMapper<T>();
+	}
 }
