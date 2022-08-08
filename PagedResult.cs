@@ -9,12 +9,12 @@ namespace Kusachius.PagingResponses
 {
 	public class PagedResult<T>
 	{
-		public IEnumerable<T> Data { get; protected set; }
-		public int PerPage { get; protected set; }
-		public int CurrentPage { get; protected set; }
-		public int? TotalPages { get; protected set; } = null;
-		public int? TotalItems { get; protected set; } = null;
-		public object Totals { get; protected set; } = null;
+		public IEnumerable<T> Data { get; set; }
+		public int PerPage { get; set; }
+		public int CurrentPage { get; set; }
+		public int? TotalPages { get; set; } = null;
+		public int? TotalItems { get; set; } = null;
+		public object Totals { get; set; } = null;
 
 		/// <summary>
 		/// Creates new result
