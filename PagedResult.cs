@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kusachius.PagingResponses
 {
-	public class PagedResult<T>
+	public class KEnumerable<T>
 	{
-		public IEnumerable<T> Data { get; set; }
+		public System.Collections.Generic.IEnumerable<T> Data { get; set; }
 		public int PerPage { get; set; }
 		public int CurrentPage { get; set; }
 		public int? TotalPages { get; set; } = null;
@@ -21,10 +21,10 @@ namespace Kusachius.PagingResponses
 		/// </summary>
 		/// <param name="query">Query.</param>
 		/// <param name="criteria">Criteria.</param>
-		public static async Task<PagedResult<T>> CreateResultAsync(IQueryable<T> query, ICriteria<T> criteria = null, bool includeTotals = true)
+		public static async Task<KEnumerable<T>> CreateResultAsync(IQueryable<T> query, ICriteria<T> criteria = null, bool includeTotals = true)
 		{
 
-			PagedResult<T> result = new PagedResult<T>();
+			KEnumerable<T> result = new KEnumerable<T>();
 
 			if (criteria != null)
 			{
@@ -80,10 +80,10 @@ namespace Kusachius.PagingResponses
 		/// <param name="query">Query.</param>
 		/// <param name="criteria">Criteria.</param>
 		/// <param name="includeTotals">If set to <c>true</c> include totals.</param>
-		public static PagedResult<T> CreateResult(IQueryable<T> query, ICriteria<T> criteria = null, bool includeTotals = true)
+		public static KEnumerable<T> CreateResult(IQueryable<T> query, ICriteria<T> criteria = null, bool includeTotals = true)
 		{
 
-			PagedResult<T> result = new PagedResult<T>();
+			KEnumerable<T> result = new KEnumerable<T>();
 
 			if (criteria != null)
 			{
@@ -140,16 +140,16 @@ namespace Kusachius.PagingResponses
 		/// </summary>
 		/// <returns>The to.</returns>
 		/// <param name="mapper">Mapper.</param>
-		public PagedResult<K> ConvertTo<K>(IMapper mapper)
+		public KEnumerable<K> ConvertTo<K>(IMapper mapper)
 		{
-			return new PagedResult<K>
+			return new KEnumerable<K>
 			{
 				PerPage = PerPage,
 				CurrentPage = CurrentPage,
 				TotalPages = TotalPages,
 				TotalItems = TotalItems,
 
-				Data = (IEnumerable<K>)mapper.Map<IEnumerable<K>>(Data)
+				Data = (System.Collections.Generic.IEnumerable<K>)mapper.Map<System.Collections.Generic.IEnumerable<K>>(Data)
 			};
 		}
 

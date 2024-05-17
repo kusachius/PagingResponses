@@ -4,7 +4,7 @@ namespace Kusachius.PagingResponses
 {
 	public class ApiResult<T>
 	{
-		public IEnumerable<T> Data;
+		public System.Collections.Generic.IEnumerable<T> Data;
 		public Meta Meta = new Meta();
 	}
 }

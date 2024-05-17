@@ -33,6 +33,6 @@ namespace Kusachius.PagingResponses
 
 		PagingInfo<T> PagingInfo { get; }
 
-		IEnumerable<string> GetSumFields();
+        System.Collections.Generic.IEnumerable<string> GetSumFields();
 	}
 }
