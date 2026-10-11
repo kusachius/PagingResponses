@@ -3,6 +3,15 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ReleaseVersion>1.4</ReleaseVersion>
+    <PackageId>Kusachius.PagingResponses</PackageId>
+    <PackageVersion>$(ReleaseVersion).0</PackageVersion>
+    <Authors>Aldis Arust</Authors>
+    <Description>Paging, sorting, and filtering helpers for ASP.NET Core and Entity Framework Core APIs, with a paged JSON response envelope.</Description>
+    <PackageTags>ASP.NET Core;Entity Framework Core;paging;pagination;sorting;filtering</PackageTags>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/kusachius/PagingResponses</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,5 +24,9 @@
   <ItemGroup>
     <Compile Remove="SqlViewer.cs" />
     <Compile Remove="Kusachius.PagingResponses.Tests/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
