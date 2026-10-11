@@ -15,7 +15,4 @@
   <ItemGroup>
     <Compile Remove="SqlViewer.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
 </Project>
