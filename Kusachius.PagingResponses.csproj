@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ReleaseVersion>1.4</ReleaseVersion>
+    <TargetFramework>net10.0</TargetFramework>
+    <ReleaseVersion>1.10</ReleaseVersion>
     <PackageId>Kusachius.PagingResponses</PackageId>
     <PackageVersion>$(ReleaseVersion).0</PackageVersion>
     <Authors>Aldis Arust</Authors>
@@ -15,10 +15,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
+    <PackageReference Include="AutoMapper" Version="15.1.1" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Kusachius.PagingResponses.Tests/**/*.cs" />

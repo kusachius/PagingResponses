@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Kusachius.PagingResponses.Tests;
@@ -64,6 +66,31 @@ public class ValueObjectValidationTests
 public class KEnumerableTests
 {
     [Fact]
+    public void ConvertTo_MapsDataAndPreservesPagination()
+    {
+        var configuration = new MapperConfiguration(
+            cfg => cfg.CreateMap<SourceItem, DestinationItem>(),
+            NullLoggerFactory.Instance);
+        configuration.AssertConfigurationIsValid();
+        var page = new KEnumerable<SourceItem>
+        {
+            Data = new[] { new SourceItem { Name = "Test" } },
+            PerPage = 2,
+            CurrentPage = 2,
+            TotalItems = 5,
+            TotalPages = 3
+        };
+
+        var result = page.ConvertTo<DestinationItem>(configuration.CreateMapper());
+
+        Assert.Equal("Test", Assert.Single(result.Data).Name);
+        Assert.Equal(page.PerPage, result.PerPage);
+        Assert.Equal(page.CurrentPage, result.CurrentPage);
+        Assert.Equal(page.TotalItems, result.TotalItems);
+        Assert.Equal(page.TotalPages, result.TotalPages);
+    }
+
+    [Fact]
     public void CreateResult_AppliesPagingAndIncludesMetadata()
     {
         var criteria = new Criteria<int>(new TestCriteriaMapper(), new LtStringCleaner());
@@ -84,5 +111,15 @@ public class KEnumerableTests
         public string ToDbSortColumn(string column) => column;
 
         public string ToDbWhereColumn(string column) => column;
+    }
+
+    public sealed class SourceItem
+    {
+        public string Name { get; set; }
+    }
+
+    public sealed class DestinationItem
+    {
+        public string Name { get; set; }
     }
 }
